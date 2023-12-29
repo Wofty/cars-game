@@ -12,9 +12,9 @@ let raceOver = false;
 
 let colours: string[] = [];
 
-async function initialize() {
+async function initialise() {
     colours = await Colours();
-    initializeCars(colours);
+    initialiseCars(colours);
     drawCars();
 }
 
@@ -22,7 +22,7 @@ function resetGame() {
     window.location.reload();
 }
 
-function initializeCars(colours: any) {
+function initialiseCars(colours: any) {
     const carWidth = 50;
     const carHeight = 20;
     const totalCars = 4;
@@ -37,7 +37,7 @@ function initializeCars(colours: any) {
         let car = new Car(
             x,
             y,
-            random(1, 5),
+            random(1, 6),
             carWidth,
             colour,
             windowColour,
@@ -93,4 +93,4 @@ btn.addEventListener('click', () => {
 reset.addEventListener('click', () => {
     resetGame();
 });
-document.addEventListener('DOMContentLoaded', initialize);
+document.addEventListener('DOMContentLoaded', initialise);
