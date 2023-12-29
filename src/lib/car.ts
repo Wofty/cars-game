@@ -67,7 +67,7 @@ export class Car {
         ctx.beginPath();
         ctx.moveTo(this.x + s * 17, this.y + s * 2);
         ctx.lineTo(this.x + s * 17, this.y + s * 10);
-        ctx.lineTo(this.x + s * 35, this.y + s * 10);
+        ctx.lineTo(this.x + s * 36, this.y + s * 10);
         ctx.lineTo(this.x + s * 24, this.y + s * 2);
         ctx.closePath();
         ctx.stroke();
@@ -77,20 +77,20 @@ export class Car {
 
         this.drawCircle(ctx, this.x + s * 30, this.y + s * 20, s * 5, 'blue');
 
-        this.drawCircle(ctx, this.x + s * 20, this.y + s * 15, s * 4, 'white');
+        /* this.drawCircle(ctx, this.x + s * 20, this.y + s * 15, s * 4, 'white'); */
 
-        ctx.font = '13px Arial';
-        ctx.fillStyle = 'white';
-        ctx.fillText(
-            this.carNumber.toString(),
-            this.x + s * 18,
-            this.y + s * 16
-        );
+        ctx.font = '13  px Arial';
         ctx.strokeStyle = 'black';
         ctx.strokeText(
             this.carNumber.toString(),
             this.x + s * 18.5,
             this.y + s * 16.5
+        );
+        ctx.fillStyle = 'white';
+        ctx.fillText(
+            this.carNumber.toString(),
+            this.x + s * 18,
+            this.y + s * 16
         );
     }
 
