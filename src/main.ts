@@ -1,42 +1,91 @@
+import { Car } from './lib/car';
+import { Colours } from './lib/colour';
+import { random } from './lib/random';
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-if (!canvas) {
-    console.error('Canvas element not found');
-    (() => {
-        return;
-    })();
-}
+const btn = document.getElementById('btn') as HTMLButtonElement;
+
+const message = document.getElementById('message') as HTMLDivElement;
 const ctx = canvas.getContext('2d');
-if (!ctx) {
-    console.error('Unable to get canvas context');
-    (() => {
-        return;
-    })();
-}
-let x = 10;
-let y = 10;
-let dx = 2;
-let ballRadius = 10;
 
-function drawBall() {
-    if (ctx) {
-        ctx.beginPath();
-        ctx.arc(x, y, 10, 0, Math.PI * 2);
-        ctx.fillStyle = '#0095DD';
-        ctx.fill();
-        ctx.closePath();
+let cars: Array<Car> = new Array<Car>();
+let raceOver = false;
+
+let colours: string[] = [];
+
+async function initialize() {
+    colours = await Colours();
+    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    drawCars(colours);
+}
+
+document.addEventListener('DOMContentLoaded', initialize);
+
+async function drawCars(colours: string[]) {
+    const carWidth = 50; // Width of each car
+    const carHeight = 20; // Height of each car
+    const totalCars = 4; // Total number of cars
+    const totalColour = colours.length; // Total number of colours
+
+    for (let i = 0; i < totalCars; i++) {
+        let x = 30; // A fixed distance from the left edge of the canvas
+        let y = (canvas.height / totalCars) * i + carHeight / 2; // Equally spaced vertically
+        let colorIndex = random(0, totalColour - 1); // Cycle through the colors
+        let colour = colours[colorIndex];
+        let windowColour = colours[(colorIndex + 1) % totalColour];
+
+        let car = new Car(
+            x,
+            y,
+            random(1, 5),
+            carWidth,
+            colour,
+            windowColour,
+            i + 1
+        );
+        cars.push(car);
+        car.draw(ctx as CanvasRenderingContext2D);
     }
 }
 
-function draw() {
-    console.log('Drawing', x, y, canvas.width, canvas.height);
-    if (ctx) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawBall();
-        if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
-            dx = 0; // Stop updating x position
+// ... (rest of your event listeners and functions) ...
+
+// Start the race
+function startRace() {
+    raceOver = false;
+    requestAnimationFrame(updateRace);
+}
+
+function updateRace() {
+    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    let allCarsFinished = true;
+
+    for (const car of cars) {
+        if (!car.hasWon(canvas.width)) {
+            car.speed = random(1, 6);
+            car.move(canvas.width);
+            allCarsFinished = false;
         }
-        x += dx;
+        car.draw(ctx as CanvasRenderingContext2D);
+
+        // Check for the winner if not already declared
+        if (!raceOver && car.hasWon(canvas.width)) {
+            message.innerHTML = `Car ${car.carNumber} has won!`;
+
+            raceOver = true;
+            // Additional logic for when the winner is found
+        }
+    }
+
+    // If not all cars have finished, keep updating
+    if (!allCarsFinished) {
+        requestAnimationFrame(updateRace);
     }
 }
 
-setInterval(draw, 10);
+btn.addEventListener('click', () => {
+    cars = [];
+    raceOver = false;
+    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    drawCars(colours);
+    startRace();
+});
