@@ -28,16 +28,16 @@ export class Car {
     move(canvasWidth: number) {
         this.x += this.speed;
         if (this.x > canvasWidth - this.actualSize) {
-            this.x = canvasWidth - this.actualSize; // Prevent the car from going beyond the canvas width
+            this.x = canvasWidth - this.actualSize;
         }
     }
     hasWon(canvasWidth: number) {
-        return this.x + this.actualSize >= canvasWidth; // Check if the car's front has crossed the finish line
+        return this.x + this.actualSize >= canvasWidth;
     }
 
     draw(ctx: CanvasRenderingContext2D) {
         let s = this.size / 20;
-        // Car body
+
         ctx.lineWidth = 4;
         ctx.fillStyle = this.color;
         ctx.beginPath();
@@ -50,7 +50,7 @@ export class Car {
         ctx.closePath();
         ctx.stroke();
         ctx.fill();
-        //car window 1
+
         ctx.lineWidth = 2;
         ctx.fillStyle = this.windowColour;
         ctx.beginPath();
@@ -61,7 +61,6 @@ export class Car {
         ctx.closePath();
         ctx.stroke();
         ctx.fill();
-        //car window 2
 
         ctx.lineWidth = 2;
         ctx.fillStyle = this.windowColour;
@@ -73,15 +72,13 @@ export class Car {
         ctx.closePath();
         ctx.stroke();
         ctx.fill();
-        //car back wheel
-        this.drawWheel(ctx, this.x + s * 10, this.y + s * 20, s * 5, 'blue');
 
-        //car front wheel
-        this.drawWheel(ctx, this.x + s * 30, this.y + s * 20, s * 5, 'blue');
+        this.drawCircle(ctx, this.x + s * 10, this.y + s * 20, s * 5, 'blue');
 
-        this.drawWheel(ctx, this.x + s * 20, this.y + s * 15, s * 4, 'white');
+        this.drawCircle(ctx, this.x + s * 30, this.y + s * 20, s * 5, 'blue');
 
-        //car number
+        this.drawCircle(ctx, this.x + s * 20, this.y + s * 15, s * 4, 'white');
+
         ctx.font = '13px Arial';
         ctx.fillStyle = 'white';
         ctx.fillText(
@@ -97,7 +94,7 @@ export class Car {
         );
     }
 
-    private drawWheel = (
+    private drawCircle = (
         ctx: CanvasRenderingContext2D,
         x: number,
         y: number,

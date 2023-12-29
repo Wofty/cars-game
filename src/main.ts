@@ -3,7 +3,7 @@ import { Colours } from './lib/colour';
 import { random } from './lib/random';
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 const btn = document.getElementById('btn') as HTMLButtonElement;
-
+const reset = document.getElementById('reset') as HTMLButtonElement;
 const message = document.getElementById('message') as HTMLDivElement;
 const ctx = canvas.getContext('2d');
 
@@ -14,25 +14,26 @@ let colours: string[] = [];
 
 async function initialize() {
     colours = await Colours();
-    ctx?.clearRect(0, 0, canvas.width, canvas.height);
-    drawCars(colours);
+    initializeCars(colours);
+    drawCars();
 }
 
-document.addEventListener('DOMContentLoaded', initialize);
+function resetGame() {
+    window.location.reload();
+}
 
-async function drawCars(colours: string[]) {
-    const carWidth = 50; // Width of each car
-    const carHeight = 20; // Height of each car
-    const totalCars = 4; // Total number of cars
-    const totalColour = colours.length; // Total number of colours
+function initializeCars(colours: any) {
+    const carWidth = 50;
+    const carHeight = 20;
+    const totalCars = 4;
+    const totalColour = colours.length;
 
     for (let i = 0; i < totalCars; i++) {
-        let x = 30; // A fixed distance from the left edge of the canvas
-        let y = (canvas.height / totalCars) * i + carHeight / 2; // Equally spaced vertically
-        let colorIndex = random(0, totalColour - 1); // Cycle through the colors
+        let x = 30;
+        let y = (canvas.height / totalCars) * i + carHeight / 2;
+        let colorIndex = random(0, totalColour - 1);
         let colour = colours[colorIndex];
         let windowColour = colours[(colorIndex + 1) % totalColour];
-
         let car = new Car(
             x,
             y,
@@ -43,13 +44,15 @@ async function drawCars(colours: string[]) {
             i + 1
         );
         cars.push(car);
-        car.draw(ctx as CanvasRenderingContext2D);
     }
 }
 
-// ... (rest of your event listeners and functions) ...
+function drawCars() {
+    cars.forEach((car) => {
+        car.draw(ctx as CanvasRenderingContext2D);
+    });
+}
 
-// Start the race
 function startRace() {
     raceOver = false;
     requestAnimationFrame(updateRace);
@@ -67,25 +70,27 @@ function updateRace() {
         }
         car.draw(ctx as CanvasRenderingContext2D);
 
-        // Check for the winner if not already declared
         if (!raceOver && car.hasWon(canvas.width)) {
             message.innerHTML = `Car ${car.carNumber} has won!`;
+            btn.classList.add('hidden');
+            reset.classList.remove('hidden');
 
             raceOver = true;
-            // Additional logic for when the winner is found
         }
     }
 
-    // If not all cars have finished, keep updating
     if (!allCarsFinished) {
         requestAnimationFrame(updateRace);
     }
 }
 
 btn.addEventListener('click', () => {
-    cars = [];
     raceOver = false;
     ctx?.clearRect(0, 0, canvas.width, canvas.height);
-    drawCars(colours);
+    drawCars();
     startRace();
 });
+reset.addEventListener('click', () => {
+    resetGame();
+});
+document.addEventListener('DOMContentLoaded', initialize);

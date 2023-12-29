@@ -6,16 +6,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/src/style.css" />
         <script type="module" defer src="/src/main.ts"></script>
-        <title>Vite + TS</title>
+        <title>Car Game</title>
     </head>
     <body>
         <div class="container">
-            <h1>Car Race</h1>
             <canvas id="canvas" width="1200" height="800">
                 This is the fallback text
             </canvas>
             <div class="flex">
-                <button id="btn" class="btn">Start Game</button>
+                <button id="reset" class="btn hidden">Reset Race</button>
+                <button id="btn" class="btn">Start Race</button>
                 <p id="message"></p>
             </div>
         </div>
